@@ -7,7 +7,8 @@
 <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="js/currency-autocomplete.js"></script>
 <script type="text/javascript" src="js/jquery.autocomplete.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+<script type="text/javascript" src="PapaParse-4.3.2/PapaParse-4.3.2/papaparse.js"></script>
+<script type="text/javascript" src="PapaParse-4.3.2/PapaParse-4.3.2/papaparse.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -20,11 +21,18 @@
 <script>
     
 function search_country(){
-  var name=document.f1.search.value;
-  document.getElementById('poptable').style.visibility="visible";
-  var result = $.csv.toArrays();
+d3.csv("worldpopulation.csv", function(data) {
+  var v=f1.search.value; 
+  for(var i=0;i<data.length;i++){
+  	if(data[i].Name==v){
+  		document.getElementById('poptable').style.visibility="visible";
+  		document.getElementById('poptable').innerHTML+="<tr><td>" + data[i].Name + "</td><td>" + (data[i].abc/1000000).toFixed(2) + "</td></tr>";
+  	}	
+  }
+});
 }
 </script>
+<!-- Search bar -->
   <div class="container">
     <div class="row">
         <div class="col-md-9">
@@ -42,6 +50,7 @@ function search_country(){
     </div>
   </div>
   
+  <!-- World Map -->
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
@@ -50,11 +59,13 @@ function search_country(){
     </div>
   </div>
 
+  <!-- Selected Countries Table -->
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
-        <table class="table" id="poptable" style="width:100%; visibility:hidden;">
-          <tr>
+      	<table class="table table-hover table-responsive" id="poptable" style="width:100%; visibility:hidden;">
+          <caption><center><h4>Selected Countries</h4></center></caption>
+          <tr class="info">
             <th>Country</th>
             <th>2016 Population (in millions)</th>
           </tr>
@@ -65,14 +76,13 @@ function search_country(){
 
 
 
-
 <script>
-
+	// Plotting World Map
     var map = new Datamap({
       element: document.getElementById('container'),
       scope: 'world',
 
-    
+    // plotting data on World Map
       dataUrl: 'worldpopulation.csv',
       dataType: 'csv',
       data:{},
@@ -87,7 +97,7 @@ function search_country(){
         borderWidth: 1,
         borderOpacity: 1,
 
-      
+    // data to be displayed when hovered over a country on world map
         popupTemplate: function(geo, dataUrl) { 
 
           return '<div class="hoverinfo"><i class="fa fa-flag-checkered" aria-hidden="true" style ="color:#FC8D59"></i><strong> ' + geo.properties.name + '</strong></div>' + 
@@ -104,9 +114,7 @@ function search_country(){
     
     }
     });  
-
-
-
 </script>
+
 </body>
 </html>
