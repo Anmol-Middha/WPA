@@ -18,20 +18,22 @@
 <link rel="stylesheet" type="text/css" href="css/search.css">
 </head>
 <body>
-<script>
-    
+
+<!--displaying selected countries on table-->
+<script>    
 function search_country(){
 d3.csv("worldpopulation.csv", function(data) {
   var v=f1.search.value; 
   for(var i=0;i<data.length;i++){
   	if(data[i].Name==v){
   		document.getElementById('poptable').style.visibility="visible";
-  		document.getElementById('poptable').innerHTML+="<tr><td>" + data[i].Name + "</td><td>" + (data[i].abc/1000000).toFixed(2) + "</td></tr>";
+  		document.getElementById('poptable').innerHTML+="<a href='worldpopulation.php'><tr><td>" + data[i].Name + "</td><td>" + (data[i].abc/1000000).toFixed(2) + "</td></tr></a>";
   	}	
   }
 });
 }
 </script>
+
 <!-- Search bar -->
   <div class="container">
     <div class="row">
