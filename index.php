@@ -19,21 +19,7 @@
 
 <!--displaying selected countries on table-->
 <script>
-function search_country(){
-d3.csv("totalpopulation.csv", function(data) {
-  var v=f1.search.value; 
-  for(var i=0;i<data.length;i++){
-  	if(data[i].Name==v){
-  		document.getElementById('tablediv').style.visibility="visible";
-  		document.getElementById('poptable').innerHTML+="<tr id='"+data[i].Name+"' onclick='current_country(this.id)' style='cursor:pointer'><td>" + data[i].Name + "</td><td>" + (data[i].a1961/1000000).toFixed(2) + "</td><td>" + (data[i].a2016/1000000).toFixed(2) + "</td></tr>";
-    }	
-  }
-});
 
-}
-function current_country(curr_id){
-  console.log(curr_id);
-}
 </script>
 
 <!-- Search bar -->
@@ -62,9 +48,12 @@ function current_country(curr_id){
       <div class="col-xs-2">
       </div>
       <div class="col-xs-8">
-        <div id="slidebar" style="width:100%;height:30px;background-color:black; opacity: 0.5; padding:5px 15px 5px 15px; border-radius: 20px;">
-          <input type="range" id="YearSlider" min="1960" max="2017" value="2017">
+        <div id="slidebar" style="width:88%;height:30px;background-color:black; opacity: 0.5; padding:5px 15px 5px 15px; border-radius: 20px; float: left;">
+          <input type="range" id="YearSlider" min="1960" max="2017" value="2000">
         </div>
+        <div style="width:10%;float: right;">
+          <p id="slider_output">2000</p>
+        </div> 
       </div>
       <div class="col-xs-2">
       </div>
@@ -97,14 +86,32 @@ function current_country(curr_id){
 
 
 <script>
+    function search_country(){
+      d3.csv("data/totalpopulation.csv", function(data) {
+      var v=f1.search.value; 
+        for(var i=0;i<data.length;i++){
+          if(data[i].Name==v){
+            document.getElementById('tablediv').style.visibility="visible";
+            document.getElementById('poptable').innerHTML+="<tr id='"+data[i].Name+"' onclick='current_country(this.id)' style='cursor:pointer'><td>" + data[i].Name + "</td><td>" + (data[i].p1961/1000000).toFixed(2) + "</td><td>" + (data[i].p2016/1000000).toFixed(2) + "</td></tr>";
+        } 
+      }
+    });
+    }
+
+    function current_country(curr_id){
+      console.log(curr_id);
+    }
+
 	  // Controliing the Slider
-    var population;
+    var population='p2000';
     var slider = document.getElementById('YearSlider');
+    var yearselected=slider.value;
     
 
     slider.oninput = function() {
-    var yearselected=(this.value);
+    yearselected=(this.value);
     population='p' + yearselected;
+    document.getElementById('slider_output').innerHTML=yearselected;
     }
 
     // Plotting World Map
@@ -112,8 +119,8 @@ function current_country(curr_id){
       element: document.getElementById('container'),
       scope: 'world',
       responsive: true,
-    // plotting data on World Map
-      dataUrl: 'TotalPopulation.csv',
+      // plotting data on World Map
+      dataUrl: 'data/TotalPopulation.csv',
       dataType: 'csv',
       data:{},
 
@@ -127,20 +134,19 @@ function current_country(curr_id){
         borderWidth: 1,
         borderOpacity: 1,
 
-    // data to be displayed when hovered over a country on world map
+        // data to be displayed when hovered over a country on world map
         popupTemplate: function(geo, dataUrl) { 
 
           return '<div class="hoverinfo"><i class="fa fa-flag-checkered" aria-hidden="true" style ="color:#FC8D59"></i><strong> ' + geo.properties.name + '</strong></div>' + 
             '<div class="hoverinfo"><i class="fa fa-users" aria-hidden="true" style ="color:#FC8D59"></i><strong> ' + (dataUrl[population]/1000000).toFixed(2) + ' (millions)</strong></div> '
-        },
+      },
 
-        
-        popupOnHover: true,
-        highlightOnHover: true,
-        highlightFillColor: '#FC8D59',
-        highlightBorderColor: 'rgba(250, 15, 160, 0.2)',
-        highlightBorderWidth: 2,
-        highlightBorderOpacity: 1,
+      popupOnHover: true,
+      highlightOnHover: true,
+      highlightFillColor: '#FC8D59',
+      highlightBorderColor: 'rgba(250, 15, 160, 0.2)',
+      highlightBorderWidth: 2,
+      highlightBorderOpacity: 1,
         
     }
     });
