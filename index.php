@@ -13,19 +13,50 @@
 <script src="http://d3js.org/topojson.v1.min.js"></script>
 <script src="http://datamaps.github.io/scripts/datamaps.world.min.js"></script>
 <script src="https://use.fontawesome.com/c97c3faabd.js"></script>
+<script type="text/javascript" src="js/firstpage.js"></script>
 <link rel="stylesheet" type="text/css" href="css/search.css">
+<style>
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;   
+    background: #000000;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; 
+    background: #428BCA;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+</style>
 </head>
 <body>
 
-<!--displaying selected countries on table-->
-<script>
-
-</script>
 
 <!-- Search bar -->
   <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-9">
+    <div class="row" style='background: linear-gradient(#171819,#393c42)'>
+        <div class="col-md-9" style="height: 50px">
+          <button type="button" class="btn btn-primary" style="margin-top:8px" data-toggle="modal" data-target="#myModal">Predict Population</button>
+
+          
         </div>
         <div class="col-md-3">
           <form name="f1" class="navbar-form" role="search">
@@ -41,18 +72,36 @@
   </div>
   
   <!-- World Map -->
-  <div class="jumbotron">
+  <div class="jumbotron" style="height: 100%">
+  <div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Predict Population</h4>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="http://localhost:5000/prediction">
+            <input type="text" placeholder="Enter country Name" name="predict_country" class="form-control"><br>
+            <input type="number" placeholder="Enter from Year to be predicted" name="predict_year1" class="form-control"><br>
+            <input type="number" placeholder="Enter end year to be predicted" name="predict_year2" class="form-control"><br>
+            <input type="submit" class="btn btn-primary"> 
+          </form>
+      </div>
+    </div>
+
+  </div>
+</div>
     <div class="container">
-    <div id="container" style="width:100% ; height:550px; border-radius: 12px"></div>
+    <div id="container" style="width:100% ; border-radius: 12px"></div>
     <div class="row">
       <div class="col-xs-2">
       </div>
       <div class="col-xs-8">
-        <div id="slidebar" style="width:88%;height:30px;background-color:black; opacity: 0.5; padding:5px 15px 5px 15px; border-radius: 20px; float: left;">
-          <input type="range" id="YearSlider" min="1960" max="2017" value="2000">
-        </div>
-        <div style="width:10%;float: right;">
-          <p id="slider_output">2000</p>
+        <div id="slidebar">
+          <input type="range" id="YearSlider" min="1960" max="2017" value="2000" class="slider" style="border-radius: 20px">
         </div> 
       </div>
       <div class="col-xs-2">
@@ -65,7 +114,7 @@
   <div class="container" id="tablediv" style="visibility: hidden">
     <div class="row">
       <div class="col-xs-12">
-      	<table class="table table-hover table-responsive" id="poptable" style="width:100%;">
+      	<table class="table table-hover table-responsive" id="poptable" method='POST' style="width:100%;">
           <caption><center><h4>Selected Countries</h4></center></caption>
           <tr class="info">
             <th>Country</th>
@@ -77,36 +126,16 @@
     </div>
     <div class="row">
       <div class="col-md-2">
-        <button class="btn btn-danger btn-sm"> Reset </button>
-        <button class="btn btn-primary btn-sm">Compare</button>
       </div>
     </div>
   </div>
 
-
-
-<script>
-    function search_country(){
-      d3.csv("data/totalpopulation.csv", function(data) {
-      var v=f1.search.value; 
-        for(var i=0;i<data.length;i++){
-          if(data[i].Name==v){
-            document.getElementById('tablediv').style.visibility="visible";
-            document.getElementById('poptable').innerHTML+="<tr id='"+data[i].Name+"' onclick='current_country(this.id)' style='cursor:pointer'><td>" + data[i].Name + "</td><td>" + (data[i].p1961/1000000).toFixed(2) + "</td><td>" + (data[i].p2016/1000000).toFixed(2) + "</td></tr>";
-        } 
-      }
-    });
-    }
-
-    function current_country(curr_id){
-      console.log(curr_id);
-    }
-
-	  // Controliing the Slider
+  <script>
+    // Controliing the Slider
     var population='p2000';
     var slider = document.getElementById('YearSlider');
-    var yearselected=slider.value;
-    
+    var yearselected = slider.value;
+
 
     slider.oninput = function() {
     yearselected=(this.value);
@@ -125,7 +154,7 @@
       data:{},
 
       fills: {
-          defaultFill: 'blue'
+          defaultFill: 'black'
       },
 
       geographyConfig: {
@@ -143,13 +172,14 @@
 
       popupOnHover: true,
       highlightOnHover: true,
-      highlightFillColor: '#FC8D59',
+      highlightFillColor: ' #428bca',
       highlightBorderColor: 'rgba(250, 15, 160, 0.2)',
       highlightBorderWidth: 2,
       highlightBorderOpacity: 1,
         
     }
     });
-</script>
+
+  </script>
 </body>
 </html>

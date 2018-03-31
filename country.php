@@ -10,7 +10,8 @@
 	<script src="http://d3js.org/d3.v3.min.js"></script>
 	<script src="http://d3js.org/topojson.v1.min.js"></script>
 	<script src="http://datamaps.github.io/scripts/datamaps.world.min.js"></script>
-	<script src="https://use.fontawesome.com/c97c3faabd.js"></script>
+	<script src="https://use.fontawelstorasome.com/c97c3faabd.js"></script>
+	<script type="text/javascript" src="js/country.js"></script>
 </head>
 <body>
 	<div class="container">

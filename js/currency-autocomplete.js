@@ -260,7 +260,7 @@ $(function(){
 "World",
 "Samoa",
 "Kosovo",
-"Yemen, Rep.",
+"Yemen",
 "South Africa",
 "Zambia",
 "Zimbabwe"
