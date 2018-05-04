@@ -15,10 +15,6 @@ A web application to analyse the population of world from 1960 to 2017 and predi
 
 
 
-![alt text](https://github.com/Anmol-Middha/WPA/blob/master/Screenshot%20(241).png)
-
-
-
 ![alt text](https://github.com/Anmol-Middha/WPA/blob/master/Screenshot%20(243).png)
 
 
